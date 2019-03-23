@@ -1,0 +1,977 @@
+{
+	"account_get_id":
+	{
+		"args":
+		[
+			{
+				"details": "User ID to fetch information for. Must be valid UUID.",
+				"name": "user_id",
+				"type": "string"
+			}
+		],
+		"desc": "Get all account information for a given user ID.",
+		"example": "local account = nk.account_get_id(\"8f4d52c7-bf28-4fcf-8af2-1d4fcf685592\")<br>print(nk.json_encode(account.wallet))",
+		"func_name": "account_get_id",
+		"params": "user_id",
+		"returns": "All account information including wallet, device IDs and more."
+	},
+	"account_update_id":
+	{
+		"args":
+		[
+		],
+		"desc": "Update one or more users.",
+		"example": "local user_id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\" -- some user ID.<br>local metadata = {}<br>local status, err = pcall(nk.account_update_id, user_id, metadata)<br>if (not status) then<br>  print((\"Account update error: %q\"):format(err))<br>end",
+		"func_name": "account_update_id",
+		"params": "user_id, metadata, username, display_name, timezone, location, language, avatar_url",
+		"returns": null
+	},
+	"aes128_decrypt":
+	{
+		"args":
+		[
+		],
+		"desc": "AES decrypt input with the key. Key must be 16 bytes long.",
+		"example": "local plaintext = nk.aes128_decrypt(\"48656C6C6F20776F726C64\", \"goldenbridge_key\")",
+		"func_name": "aes128_decrypt",
+		"params": "input, key",
+		"returns": "The decrypted input."
+	},
+	"aes128_encrypt":
+	{
+		"args":
+		[
+		],
+		"desc": "AES encrypt input with the key. Key must be 16 bytes long.",
+		"example": "local cyphertext = nk.aes128_encrypt(\"48656C6C6F20776F726C64\", \"goldenbridge_key\")",
+		"func_name": "aes128_encrypt",
+		"params": "input, key",
+		"returns": "The encrypted input."
+	},
+	"authenticate_custom":
+	{
+		"args":
+		[
+		],
+		"desc": "Authenticate user and create a session token.",
+		"example": "local user_id, username, created = nk.authenticate_custom(\"48656C6C6F20776F726C64\", \"username\", true)",
+		"func_name": "authenticate_custom",
+		"params": "id, username, create",
+		"returns": "The user\\'s ID, username, and a boolean flag indicating if the account was just created (`true`) or already existed (`false`)."
+	},
+	"authenticate_device":
+	{
+		"args":
+		[
+		],
+		"desc": "Authenticate user and create a session token.",
+		"example": "local user_id, username, created = nk.authenticate_device(\"48656C6C6F20776F726C64\", \"username\", true)",
+		"func_name": "authenticate_device",
+		"params": "id, username, create",
+		"returns": "The user\\'s ID, username, and a boolean flag indicating if the account was just created (`true`) or already existed (`false`)."
+	},
+	"authenticate_email":
+	{
+		"args":
+		[
+		],
+		"desc": "Authenticate user and create a session token.",
+		"example": "local user_id, username, created = nk.authenticate_email(\"email@example.com\", \"48656C6C6F20776F726C64\", \"username\", true)",
+		"func_name": "authenticate_email",
+		"params": "email, password, username, create",
+		"returns": "The user\\'s ID, username, and a boolean flag indicating if the account was just created (`true`) or already existed (`false`)."
+	},
+	"authenticate_facebook":
+	{
+		"args":
+		[
+		],
+		"desc": "Authenticate user and create a session token.",
+		"example": "local user_id, username, created = nk.authenticate_facebook(\"some-oauth-access-token\", true, \"username\", true)",
+		"func_name": "authenticate_facebook",
+		"params": "token, import, username, create",
+		"returns": "The user\\'s ID, username, and a boolean flag indicating if the account was just created (`true`) or already existed (`false`)."
+	},
+	"authenticate_gamecenter":
+	{
+		"args":
+		[
+		],
+		"desc": "Authenticate user and create a session token.",
+		"example": "local user_id, username, created = nk.authenticate_google(\"some-oauth-access-token\", \"username\", true)",
+		"func_name": "authenticate_gamecenter",
+		"params": "player_id, bundle_id, timestamp, salt, signature, public_key_url, username, create",
+		"returns": "The user\\'s ID, username, and a boolean flag indicating if the account was just created (`true`) or already existed (`false`).<br><br>---<br><br>__authenticate_google (token, username, create)__<br><br>Authenticate user and create a session token.<br><br>_Parameters_<br><br>| Param | Type | Description |<br>| ----- | ---- | ----------- |<br>| token | string | Google OAuth access token. |<br>| username | string | Optional username. If left empty, one is generated. |<br>| create | bool | Create user if one didn\\'t exist previously. By default this is set to true. |<br><br>_Returns_<br><br>The user\\'s ID, username, and a boolean flag indicating if the account was just created (`true`) or already existed (`false`)."
+	},
+	"authenticate_steam":
+	{
+		"args":
+		[
+		],
+		"desc": "Authenticate user and create a session token.",
+		"example": "local user_id, username, created = nk.authenticate_steam(\"steam-token\", \"username\", true)",
+		"func_name": "authenticate_steam",
+		"params": "token, username, create",
+		"returns": "The user\\'s ID, username, and a boolean flag indicating if the account was just created (`true`) or already existed (`false`)."
+	},
+	"authenticate_token_generate":
+	{
+		"args":
+		[
+		],
+		"desc": "Generate a Nakama session token from a username. This is not the same as an authentication mechanism because a user does not get created and input is not checked against the database.<br><br>This is useful if you have an external source of truth where users are registered.",
+		"example": "local token = nk.authenticate_token_generate(\"user_id\", \"username\")<br>print(token)",
+		"func_name": "authenticate_token_generate",
+		"params": "user_id, username",
+		"returns": "The session token created for the given user details."
+	},
+	"base16_decode":
+	{
+		"args":
+		[
+			{
+				"details": "The string which will be base16 decoded.",
+				"name": "input",
+				"type": "string"
+			}
+		],
+		"desc": "Base 16 decode the input.",
+		"example": "local decoded = nk.base16_decode(\"48656C6C6F20776F726C64\")<br>print(decoded) -- outputs \"Hello world\"",
+		"func_name": "base16_decode",
+		"params": "input",
+		"returns": "The base 16 decoded input."
+	},
+	"base16_encode":
+	{
+		"args":
+		[
+			{
+				"details": "The string which will be base16 encoded.",
+				"name": "input",
+				"type": "string"
+			}
+		],
+		"desc": "Base 16 encode the input.",
+		"example": "local encoded = nk.base16_encode(\"Hello world\")<br>print(encoded) -- outputs \"48656C6C6F20776F726C64\"",
+		"func_name": "base16_encode",
+		"params": "input",
+		"returns": "The base 16 encoded input."
+	},
+	"base64_decode":
+	{
+		"args":
+		[
+			{
+				"details": "The string which will be base64 decoded.",
+				"name": "input",
+				"type": "string"
+			}
+		],
+		"desc": "Base 64 decode the input.",
+		"example": "local decoded = nk.base64_decode(\"SGVsbG8gd29ybGQ=\")<br>print(decoded) -- outputs \"Hello world\"",
+		"func_name": "base64_decode",
+		"params": "input",
+		"returns": "The base 64 decoded input."
+	},
+	"base64_encode":
+	{
+		"args":
+		[
+			{
+				"details": "The string which will be base64 encoded.",
+				"name": "input",
+				"type": "string"
+			}
+		],
+		"desc": "Base 64 encode the input.",
+		"example": "local encoded = nk.base64_encode(\"Hello world\")<br>print(encoded) -- outputs \"SGVsbG8gd29ybGQ=\"",
+		"func_name": "base64_encode",
+		"params": "input",
+		"returns": "The base 64 encoded input."
+	},
+	"base64url_decode":
+	{
+		"args":
+		[
+			{
+				"details": "The string which will be base64 URL decoded.",
+				"name": "input",
+				"type": "string"
+			}
+		],
+		"desc": "Base 64 URL decode the input.",
+		"example": "local decoded = nk.base64url_decode(\"SGVsbG8gd29ybGQ=\")<br>print(decoded) -- outputs \"Hello world\"",
+		"func_name": "base64url_decode",
+		"params": "input",
+		"returns": "The base 64 URL decoded input."
+	},
+	"base64url_encode":
+	{
+		"args":
+		[
+			{
+				"details": "The string which will be base64 URL encoded.",
+				"name": "input",
+				"type": "string"
+			}
+		],
+		"desc": "Base 64 URL encode the input.",
+		"example": "local encoded = nk.base64url_encode(\"Hello world\")<br>print(encoded) -- outputs \"SGVsbG8gd29ybGQ=\"",
+		"func_name": "base64url_encode",
+		"params": "input",
+		"returns": "The base 64 URL encoded input."
+	},
+	"bcrypt_compare":
+	{
+		"args":
+		[
+		],
+		"desc": "Compare hashed input against a plaintext input.",
+		"example": "local is_same = nk.bcrypt_compare(\"$2a$04$bl3tac7Gwbjy04Q8H2QWLuUOEkpoNiAeTxazxi4fVQQRMGbMaUHQ2\", \"123456\")<br>print(is_same) -- outputs true",
+		"func_name": "bcrypt_compare",
+		"params": "hash, plaintext",
+		"returns": "True if they are the same, false otherwise."
+	},
+	"bcrypt_hash":
+	{
+		"args":
+		[
+			{
+				"details": "The string which will be bcrypted.",
+				"name": "input",
+				"type": "string"
+			}
+		],
+		"desc": "Generate one-way hashed string using bcrypt.",
+		"example": "local hashed = nk.bcrypt_hash(\"Hello World\")<br>print(hashed)",
+		"func_name": "bcrypt_hash",
+		"params": "input",
+		"returns": "The hashed input."
+	},
+	"cron_next":
+	{
+		"args":
+		[
+		],
+		"desc": "Parses a CRON expression and a timestamp in UTC seconds, and returns the next matching timestamp in UTC seconds.",
+		"example": "-- Based on the current time, return the UTC seconds value representing the<br>-- nearest upcoming Monday at 00:00 UTC (midnight.)<br>local expr = \"0 0 * * 1\"<br>local ts = os.time()<br>local next = nk.cron_next(expr, ts)",
+		"func_name": "cron_next",
+		"params": "expression, timestamp",
+		"returns": "The next UTC seconds timestamp that matches the given CRON expression, and is immediately after the given timestamp."
+	},
+	"group_create":
+	{
+		"args":
+		[
+		],
+		"desc": "Setup a group with various configuration settings. The group will be created if they don\\'t exist or fail if the group name is taken.<br><br>A user ID must be given as they\\'ll be made group superadmin.",
+		"example": "local metadata = { -- Add whatever custom fields you want.<br>  my_custom_field = \"some value\"<br>}<br><br>local user_id = \"dcb891ea-a311-4681-9213-6741351c9994\"<br>local creator_id = \"dcb891ea-a311-4681-9213-6741351c9994\"<br>local name = \"Some unique group name\"<br>local description = \"My awesome group.\"<br>local lang = \"en\"<br>local open = true<br>local creator_id = \"4c2ae592-b2a7-445e-98ec-697694478b1c\"<br>local avatar_url = \"url://somelink\"<br>local maxMemberCount = 100<br><br>nk.group_create(user_id, name, creator_id, lang, description, avatar_url, open, metadata, maxMemberCount)",
+		"func_name": "group_create",
+		"params": "user_id, name, creator_id, lang, description, avatar_url, open, metadata, max_count",
+		"returns": null
+	},
+	"group_delete":
+	{
+		"args":
+		[
+			{
+				"details": "The group ID to delete.",
+				"name": "group_id",
+				"type": "string"
+			}
+		],
+		"desc": "Delete a group.",
+		"example": "group_id = \"f00fa79a-750f-11e7-8626-0fb79f45ff97\"<br>nk.group_delete(group_id)",
+		"func_name": "group_delete",
+		"params": "group_id",
+		"returns": null
+	},
+	"group_update":
+	{
+		"args":
+		[
+		],
+		"desc": "Update a group with various configuration settings. The group which is updated can change some or all of its fields.",
+		"example": "local metadata = {<br>  some_field = \"some value\"<br>}<br>group_id = \"f00fa79a-750f-11e7-8626-0fb79f45ff97\"<br>description = \"An updated description.\"<br><br>nk.group_update(group_id, \"\", \"\", \"\", description, \"\", nil, metadata, 0)",
+		"func_name": "group_update",
+		"params": "group_id, name, creator_id, lang, description, avatar_url, open, metadata, max_count",
+		"returns": null
+	},
+	"group_users_list":
+	{
+		"args":
+		[
+			{
+				"details": "The Id of the group who\\'s members, admins and superadmins you want to list.",
+				"name": "group_id",
+				"type": "string"
+			}
+		],
+		"desc": "List all members, admins and superadmins which belong to a group. This also list incoming join requests too.",
+		"example": "local group_id = \"a1aafe16-7540-11e7-9738-13777fcc7cd8\"<br>local members = nk.group_users_list(group_id)<br>for _, m in ipairs(members)<br>do<br>  local msg = (\"Member username %q has status %q\"):format(m.username, m.state)<br>  print(msg)<br>end",
+		"func_name": "group_users_list",
+		"params": "group_id",
+		"returns": "The user information for members, admins and superadmins for the group. Also users who sent a join request as well."
+	},
+	"groups_get_id":
+	{
+		"args": null,
+		"desc": "Fetch one or more groups by their ID.",
+		"example": "local group_ids = {\"0BF154F1-F7D1-4AAA-A060-5FFED3CDB982\", \"997C0D18-0B25-4AEC-8331-9255BD36665D\"}<br>local groups = nk.groups_get_id(group_ids)<br>for _, g in ipairs(groups)<br>do<br>  local msg = (\"Group name %q with id %q\"):format(g.name, g.id)<br>  print(msg)<br>end",
+		"func_name": "groups_get_id",
+		"params": "group_ids",
+		"returns": "A table (array) of groups with their fields."
+	},
+	"hmac_sha256_hash":
+	{
+		"args":
+		[
+		],
+		"desc": "Create a 256 hash from input and key.",
+		"example": "local hash = nk.hmac_sha256_hash(\"encryptthis\", \"somekey\")<br>print(hash)",
+		"func_name": "hmac_sha256_hash",
+		"params": "input, key",
+		"returns": "Hashed input using the key."
+	},
+	"http_request":
+	{
+		"args":
+		[
+		],
+		"desc": "Send a HTTP request and receive the result as a Lua table.",
+		"example": "local url = \"https://google.com/\"<br>local method = \"HEAD\"<br>local headers = {<br>  [\"Content-Type\"] = \"application/json\",<br>  [\"Accept\"] = \"application/json\"<br>}<br>local content = nk.json_encode({}) -- encode table as JSON string<br>local success, code, headers, body = pcall(nk.http_request, url, method, headers, content)<br>if (not success) then<br>  nk.logger_error((\"Failed %q\"):format(code))<br>elseif (code >= 400) then<br>  nk.logger_error((\"Failed %q %q\"):format(code, body))<br>else<br>  nk.logger_info((\"Success %q %q\"):format(code, body))<br>end",
+		"func_name": "http_request",
+		"params": "url, method, headers, content",
+		"returns": "`code, headers, body` - Multiple return values for the HTTP response."
+	},
+	"json_decode":
+	{
+		"args":
+		[
+			{
+				"details": "The JSON encoded input.",
+				"name": "input",
+				"type": "string"
+			}
+		],
+		"desc": "Decode the JSON input as a Lua table.",
+		"example": "local json = nk.json_decode(\\'{\"hello\": \"world\"}\\')<br>print(json.hello)",
+		"func_name": "json_decode",
+		"params": "input",
+		"returns": "A Lua table with the decoded JSON."
+	},
+	"json_encode":
+	{
+		"args":
+		[
+			{
+				"details": "The input to encode as JSON.",
+				"name": "input",
+				"type": "string"
+			}
+		],
+		"desc": "Encode the input as JSON.",
+		"example": "local input = {[\"some\"] = \"json\"}<br>local json = nk.json_encode(input)<br>print(json) -- outputs \\'{\"some\": \"json\"}\\'",
+		"func_name": "json_encode",
+		"params": "input",
+		"returns": "The encoded JSON string."
+	},
+	"leaderboard_create":
+	{
+		"args":
+		[
+		],
+		"desc": "Setup a new dynamic leaderboard with the specified ID and various configuration settings. The leaderboard will be created if it doesn\\'t already exist, otherwise its configuration will *not* be updated.",
+		"example": "local id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\"<br>local authoritative = false<br>local sort = \"desc\"<br>local operator = \"best\"<br>local reset = \"0 0 * * 1\"<br>local metadata = {<br>  weather_conditions = \"rain\"<br>}<br>nk.leaderboard_create(id, authoritative, sort, operator, reset, metadata)",
+		"func_name": "leaderboard_create",
+		"params": "id, authoritative, sort, operator, reset, metadata",
+		"returns": null
+	},
+	"leaderboard_delete":
+	{
+		"args":
+		[
+			{
+				"details": "The unique identifier for the leaderboard to delete. Mandatory field.",
+				"name": "id",
+				"type": "string"
+			}
+		],
+		"desc": "Delete a leaderboard and all scores that belong to it.",
+		"example": "local id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\"<br>nk.leaderboard_delete(id)",
+		"func_name": "leaderboard_delete",
+		"params": "id",
+		"returns": null
+	},
+	"leaderboard_record_delete":
+	{
+		"args":
+		[
+		],
+		"desc": "Remove an owner\\'s record from a leaderboard, if one exists.",
+		"example": "local id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\"<br>local owner = \"4c2ae592-b2a7-445e-98ec-697694478b1c\"<br>nk.leaderboard_record_delete(id, owner)",
+		"func_name": "leaderboard_record_delete",
+		"params": "id, owner",
+		"returns": null
+	},
+	"leaderboard_record_write":
+	{
+		"args":
+		[
+		],
+		"desc": "Use the preconfigured operator for the given leaderboard to submit a score for a particular user.",
+		"example": "local metadata = {<br>  weather_conditions = \"rain\"<br>}<br>local id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\"<br>local owner = \"4c2ae592-b2a7-445e-98ec-697694478b1c\"<br>local username = \"02ebb2c8\"<br>local score = 10<br>local subscore = 0<br>nk.leaderboard_record_write(id, owner, username, score, subscore, metadata)",
+		"func_name": "leaderboard_record_write",
+		"params": "id, owner, username, score, subscore, metadata",
+		"returns": null
+	},
+	"leaderboard_records_list":
+	{
+		"args":
+		[
+		],
+		"desc": "List records on the specified leaderboard, optionally filtering to only a subset of records by their owners. Records will be listed in the preconfigured leaderboard sort order.",
+		"example": "local id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\"<br>local owners = {}<br>local limit = 10<br>local records, owner_records, next_cursor, prev_cursor = nk.leaderboard_records_list(id, owners, limit)",
+		"func_name": "leaderboard_records_list",
+		"params": "id, owners, limit, cursor",
+		"returns": "A page of leaderboard records, a list of owner leaderboard records (empty if the `owners` input parameter is not set), an optional next page cursor that can be used to retrieve the next page of records (if any), and an optional previous page cursor that can be used to retrieve the previous page of records (if any)."
+	},
+	"logger_error":
+	{
+		"args":
+		[
+			{
+				"details": "The message to write to server logs with ERROR level severity.",
+				"name": "message",
+				"type": "string"
+			}
+		],
+		"desc": "Write an ERROR level message to the server logs.",
+		"example": "local message = (\"%q - %q\"):format(\"hello\", \"world\")<br>nk.logger_error(message)",
+		"func_name": "logger_error",
+		"params": "message",
+		"returns": "(string) - The message which was written to the logs."
+	},
+	"logger_info":
+	{
+		"args":
+		[
+			{
+				"details": "The message to write to server logs with INFO level severity.",
+				"name": "message",
+				"type": "string"
+			}
+		],
+		"desc": "Write an INFO level message to the server logs.",
+		"example": "local message = (\"%q - %q\"):format(\"hello\", \"world\")<br>nk.logger_info(message)",
+		"func_name": "logger_info",
+		"params": "message",
+		"returns": "(string) - The message which was written to the logs."
+	},
+	"logger_warn":
+	{
+		"args":
+		[
+			{
+				"details": "The message to write to server logs with WARN level severity.",
+				"name": "message",
+				"type": "string"
+			}
+		],
+		"desc": "Write an WARN level message to the server logs.",
+		"example": "local message = (\"%q - %q\"):format(\"hello\", \"world\")<br>nk.logger_warn(message)",
+		"func_name": "logger_warn",
+		"params": "message",
+		"returns": "(string) - The message which was written to the logs."
+	},
+	"match_create":
+	{
+		"args":
+		[
+		],
+		"desc": "Create a new authoritative realtime multiplayer match running on the given runtime module name. The given `params` are passed to the match\\'s init hook.",
+		"example": "-- Assumes you\\'ve registered a runtime module with a path of \"my/match/module.lua\".<br>local module = \"my.match.module\"<br>local params = { some = \"data\" }<br>local match_id = nk.match_create(module, params)",
+		"func_name": "match_create",
+		"params": "module, params",
+		"returns": "(string) - The match ID of the newly created match. Clients can immediately use this ID to join the match."
+	},
+	"match_list":
+	{
+		"args":
+		[
+		],
+		"desc": "List currently running realtime multiplayer matches and optionally filter them by authoritative mode, label, and current participant count.",
+		"example": "-- List at most 10 matches, not authoritative, and that<br>-- have between 2 and 4 players currently participating.<br>local limit = 10<br>local authoritative = false<br>local label = nil<br>local min_size = 2<br>local max_size = 4<br>local matches = nk.match_list(limit, authoritative, label, min_size, max_size)<br>for _, m in ipairs(matches)<br>do<br>  local message = (\"found match with id: %q\"):format(m.match_id)<br>  print(message)<br>end",
+		"func_name": "match_list",
+		"params": "limit, authoritative, label, min_size, max_size",
+		"returns": null
+	},
+	"notification_send":
+	{
+		"args":
+		[
+		],
+		"desc": "Send one in-app notification to a user. Have a look at the section on [in-app notifications](social-in-app-notifications.md).",
+		"example": "local subject = \"You\\'ve unlocked level 100!\"<br>local content = nk.json_encode({<br>  reward_coins = 1000<br>})<br>local user_id = \"4c2ae592-b2a7-445e-98ec-697694478b1c\" -- who to send<br>local sender_id = \"dcb891ea-a311-4681-9213-6741351c9994\" -- who the message if from<br>local code = 101<br>local persistent = true<br><br>nk.notification_send(user_id, subject, content, code, sender_id, persistent)",
+		"func_name": "notification_send",
+		"params": "user_id, subject, content, code, sender_id, persistent",
+		"returns": null
+	},
+	"notifications_send":
+	{
+		"args":
+		[
+			{
+				"details": "The Lua table array of notifications to send.",
+				"name": "new_notifications",
+				"type": "table"
+			}
+		],
+		"desc": "Send one or more in-app notifications to a user. Have a look at the section on [in-app notifications](social-in-app-notifications.md).",
+		"example": "local subject = \"You\\'ve unlocked level 100!\"<br>local content = nk.json_encode({<br>  reward_coins = 1000<br>})<br>local user_id = \"4c2ae592-b2a7-445e-98ec-697694478b1c\" -- who to send<br>local sender_id = \"dcb891ea-a311-4681-9213-6741351c9994\" -- who the message if from<br>local code = 101<br><br>local new_notifications = {<br>  { subject = subject, content = content, sender_id = sender_id, user_id = user_id, code = code, persistent = true}<br>}<br>nk.notifications_send(new_notifications)",
+		"func_name": "notifications_send",
+		"params": "new_notifications",
+		"returns": null
+	},
+	"register_matchmaker_matched":
+	{
+		"args":
+		[
+			{
+				"details": "A function reference which will be executed on each matchmake completion.",
+				"name": "func",
+				"type": "function"
+			}
+		],
+		"desc": "Registers a function that will be called when matchmaking finds opponents.",
+		"example": "local function my_func(context, matched_users)<br>  -- run some code<br><br>  for _, m in ipairs(matched_users)<br>  do<br>    print(m.presence[\"user_id\"])<br>    print(m.presence[\"session_id\"])<br>    print(m.presence[\"username\"])<br>    print(m.presence[\"node\"])<br><br>    for _, p in ipairs(m.properties)<br>    do<br>      print(p)<br>    end<br>  end<br>nk.register_matchmaker_matched(my_func)",
+		"func_name": "register_matchmaker_matched",
+		"params": "func",
+		"returns": null
+	},
+	"register_req_after":
+	{
+		"args":
+		[
+		],
+		"desc": "Register a function with the server which will be executed after every non-realtime message with the specified message name.<br><br>This can be used to apply custom logic to standard features in the server. Similar to the `register_before` function but it will not block the execution pipeline. The logic will be executed in parallel to any response message sent back to a client. Have a look at the section on [runtime code basics](runtime-code-basics.md).",
+		"example": "local function my_func(context, payload)<br>  -- run some code<br>end<br>nk.register_req_after(my_func, \"FriendsAdd\")",
+		"func_name": "register_req_after",
+		"params": "func, msgname",
+		"returns": null
+	},
+	"register_req_before":
+	{
+		"args":
+		[
+		],
+		"desc": "Register a function with the server which will be executed before every non-realtime message with the specified message name.<br><br>For example `register_req_before(somefunc, \"FriendsAdd\")` will execute the function before the Friend Add message is executed by the server\\'s message pipeline. This can be used to apply custom conditions to standard features in the server. Have a look at the section on [runtime code basics](runtime-code-basics.md).",
+		"example": "local function my_func(context, payload)<br>  -- run some code<br>  return payload -- important!<br>end<br>nk.register_req_before(my_func, \"FriendsAdd\")",
+		"func_name": "register_req_before",
+		"params": "func, msgname",
+		"returns": null
+	},
+	"register_rpc":
+	{
+		"args":
+		[
+		],
+		"desc": "Registers a function for use with client RPC to the server.<br><br>The ID can be any string identifier and is sent by the client. The ID is used to map the client RPC message to the specific function to execute. Have a look at the section on [runtime code basics](runtime-code-basics.md).<br><br>This function can also be used to register a HTTP endpoint within the server. Have a look at the [Server to server](runtime-code-basics.md#server-to-server) docs for more info.",
+		"example": "local function my_func(context, payload)<br>  -- run some code<br>end<br>nk.register_rpc(my_func, \"my_func_id\")",
+		"func_name": "register_rpc",
+		"params": "func, id",
+		"returns": null
+	},
+	"register_rt_after":
+	{
+		"args":
+		[
+		],
+		"desc": "Register a function with the server which will be executed after every realtime message with the specified message name.<br><br>This can be used to apply custom logic to standard features in the server. Similar to the `register_before` function but it will not block the execution pipeline. The logic will be executed in parallel to any response message sent back to a client. Have a look at the section on [runtime code basics](runtime-code-basics.md).",
+		"example": "local function my_func(context, payload)<br>  -- run some code<br>end<br>nk.register_rt_after(my_func, \"ChannelJoin\")",
+		"func_name": "register_rt_after",
+		"params": "func, msgname",
+		"returns": null
+	},
+	"register_rt_before":
+	{
+		"args":
+		[
+		],
+		"desc": "Register a function with the server which will be executed before every realtime message with the specified message name.<br><br>For example `register_rt_before(somefunc, \"ChannelJoin\")` will execute the function before the Channel Join message is executed by the server\\'s message pipeline. This can be used to apply custom conditions to standard features in the server. Have a look at the section on [runtime code basics](runtime-code-basics.md).",
+		"example": "local function my_func(context, payload)<br>  -- run some code<br>  return payload -- important!<br>end<br>nk.register_rt_before(my_func, \"ChannelJoin\")",
+		"func_name": "register_rt_before",
+		"params": "func, msgname",
+		"returns": null
+	},
+	"run_once":
+	{
+		"args":
+		[
+			{
+				"details": "A function reference which will be executed only once.",
+				"name": "func",
+				"type": "function"
+			}
+		],
+		"desc": "The runtime environment allows you to run code that must only be executed only once. This is useful if you have custom SQL queries that you need to perform (like creating a new table) or to register with third party services.",
+		"example": "nk.run_once(function(context)<br>  -- this is to create a system ID that cannot be used via a client.<br>  local system_id = context.env[\"SYSTEM_ID\"]<br><br>  nk.sql_exec([[<br>INSERT INTO users (id, username)<br>VALUES ($1, $2)<br>ON CONFLICT (id) DO NOTHING<br>  ]], { system_id, \"system_id\" })<br>end)",
+		"func_name": "run_once",
+		"params": "func",
+		"returns": null
+	},
+	"sql_exec":
+	{
+		"args": null,
+		"desc": "Execute an arbitrary SQL query and return the number of rows affected. Typically an `INSERT`, `DELETE`, or `UPDATE` statement with no return columns.<br><br>| Param | Type | Description |<br>| ----- | ---- | ----------- |<br>| query | string | A SQL query to execute. |<br>| parameters | table | Arbitrary parameters to pass to placeholders in the query. |",
+		"example": "-- This example query deletes all expired leaderboard records.<br>local query = [[DELETE FROM leaderboard_record<br>                WHERE expires_at > 0 AND expires_at <= $1]]<br>local parameters = {os.time() * 1000}<br>local affected_rows_count = nk.sql_exec(query, parameters)",
+		"func_name": "sql_exec",
+		"params": "query, parameters",
+		"returns": "A single number indicating the number of rows affected by the query."
+	},
+	"sql_query":
+	{
+		"args": null,
+		"desc": "Execute an arbitrary SQL query that is expected to return row data. Typically a `SELECT` statement.<br><br>| Param | Type | Description |<br>| ----- | ---- | ----------- |<br>| query | string | A SQL query to execute. |<br>| parameters | table | Arbitrary parameters to pass to placeholders in the query. |",
+		"example": "-- Example fetching a list of usernames for the 100 most recetly signed up users.<br>local query = [[SELECT username, create_time<br>                FROM users<br>                ORDER BY create_time DESC<br>                LIMIT 100]]<br>local parameters = {}<br>local rows = nk.sql_query(query, parameters)<br><br>-- Example of processing the rows.<br>nk.logger_info(\"Selected \" .. #rows .. \" rows.\")<br>for i, row in ipairs(rows) do<br>  nk.logger_info(\"Username \" .. row.username .. \" created at \" .. row.create_time)<br>end",
+		"func_name": "sql_query",
+		"params": "query, parameters",
+		"returns": "A Lua table containing the result rows in the format:<br>```lua<br>{<br>  {column1 = \"value1\", column2 = \"value2\", ...}, -- Row 1.<br>  {column1 = \"value1\", column2 = \"value2\", ...}, -- Row 2.<br>  ...<br>}<br>```"
+	},
+	"storage_delete":
+	{
+		"args":
+		[
+			{
+				"details": "A table array of object identifiers to be removed.",
+				"name": "object_ids",
+				"type": "table"
+			}
+		],
+		"desc": "Remove one or more objects by their collection/keyname and optional user.",
+		"example": "local user_id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\" -- some user ID.<br>local friend_user_id = \"8d98ee3f-8c9f-42c5-b6c9-c8f79ad1b820\" -- friend ID.<br>local object_ids = {<br>  {collection = \"save\", key = \"save1\", user_id = user_id},<br>  {collection = \"save\", key = \"save2\", user_id = user_id},<br>  {collection = \"public\", key = \"progress\", user_id = friend_user_id}<br>}<br>nk.storage_delete(object_ids)",
+		"func_name": "storage_delete",
+		"params": "object_ids",
+		"returns": null
+	},
+	"storage_list":
+	{
+		"args":
+		[
+		],
+		"desc": "You can list records in a collection and page through results. The records returned can be filtered to those owned by the user or \"\" for public records which aren\\'t owned by a user.",
+		"example": "local user_id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\" -- some user ID.<br>local records = nk.storage_list(user_id \"collection\", 10, \"\")<br>for _, r in ipairs(records)<br>do<br>  local message = (\"read: %q, write: %q, value: %q\"):format(r.permission_read, r.permission_write, r.value)<br>  print(message)<br>end",
+		"func_name": "storage_list",
+		"params": "user_id, collection, limit, cursor",
+		"returns": "A table array of the records result set."
+	},
+	"storage_read":
+	{
+		"args":
+		[
+			{
+				"details": "A table array of object identifiers to be fetched.",
+				"name": "object_ids",
+				"type": "table"
+			}
+		],
+		"desc": "Fetch one or more records by their bucket/collection/keyname and optional user.",
+		"example": "local user_id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\" -- some user ID.<br>local object_ids = {<br>  {collection = \"save\", key = \"save1\", user_id = user_id},<br>  {collection = \"save\", key = \"save2\", user_id = user_id},<br>  {collection = \"save\", key = \"save3\", user_id = user_id}<br>}<br>local objects = nk.storage_read(object_ids)<br>for _, r in ipairs(objects)<br>do<br>  local message = (\"read: %q, write: %q, value: %q\"):format(r.permission_read, r.permission_write, r.value)<br>  print(message)<br>end",
+		"func_name": "storage_read",
+		"params": "object_ids",
+		"returns": "A table array of object result set."
+	},
+	"storage_update":
+	{
+		"args":
+		[
+			{
+				"details": "A table array of records to update.",
+				"name": "record_keys",
+				"type": "table"
+			}
+		],
+		"desc": "Update one or more records by their bucket/collection/keyname and optional user. Have a look at the section on [storage collections](storage-collections.md).",
+		"example": "local user_id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\" -- some user ID.<br>local now = os.time() * 1000 -- current time converted for msec<br>local update_ops = {<br>  {Op = \"init\", Path = \"/\", Value = { progress = 1 }},<br>  {Op = \"incr\", Path = \"/progress\", Value = 1},<br>  {Op = \"replace\", Path = \"/updated_at\", Value = now}<br>}<br>local record_keys = {<br>  {Bucket = \"b\", Collection = \"c\", Record = \"r\", UserId = user_id, Update = update_ops},<br>  {Bucket = \"b\", Collection = \"c\", Record = \"r2\", UserId = user_id, Update = update_ops, PermissionRead = 2, PermissionWrite = 1}<br>  {Bucket = \"b\", Collection = \"c\", Record = \"r3\", UserId = user_id, Update = update_ops, Version=\"*\", PermissionRead = 1, PermissionWrite = 1}<br>}<br>nk.storage_update(record_keys)",
+		"func_name": "storage_update",
+		"params": "record_keys",
+		"returns": null
+	},
+	"storage_write":
+	{
+		"args":
+		[
+			{
+				"details": "A table array of new objects to write.",
+				"name": "new_objects",
+				"type": "table"
+			}
+		],
+		"desc": "Write one or more objects by their collection/keyname and optional user.",
+		"example": "local user_id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\" -- some user ID.<br>local new_objects = {<br>  {collection = \"save\", key = \"save1\", user_id = user_id, value = {}},<br>  {collection = \"save\", key = \"save2\", user_id = user_id, value = {}},<br>  {collection = \"save\", key = \"save3\", user_id = user_id, value = {}, permission_read = 2, permission_write = 1},<br>  {collection = \"save\", key = \"save3\", user_id = user_id, value = {}, version=\"*\", permission_read = 1, permission_write = 1}<br>}<br>nk.storage_write(new_objects)",
+		"func_name": "storage_write",
+		"params": "new_objects",
+		"returns": null
+	},
+	"time":
+	{
+		"args": null,
+		"desc": "Get the current UTC time in milliseconds using the system wall clock.",
+		"example": "local utc_msec = nk.time()",
+		"func_name": "time",
+		"params": null,
+		"returns": "A number representing the current UTC time in milliseconds."
+	},
+	"tournament_add_attempt":
+	{
+		"args":
+		[
+		],
+		"desc": "Add additional score attempts to the owner\\'s tournament record. This overrides the max number of score attempts allowed in the tournament for this specific owner.",
+		"example": "local id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\"<br>local owner = \"leaderboard-record-owner\"<br>local count = -10<br>nk.tournament_add_attempt(id, owner, count)",
+		"func_name": "tournament_add_attempt",
+		"params": "id, owner, count",
+		"returns": null
+	},
+	"tournament_create":
+	{
+		"args":
+		[
+		],
+		"desc": "Setup a new dynamic tournament with the specified ID and various configuration settings. The underlying leaderboard will be created if it doesn\\'t already exist, otherwise its configuration will *not* be updated.",
+		"example": "local id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\"<br>local authoritative = false<br>local sort = \"desc\"<br>local operator = \"best\"<br>local reset = \"0 0 * * 1\"<br>local metadata = {<br>  weather_conditions = \"rain\"<br>}<br>nk.tournament_create(id, authoritative, sort, operator, reset, metadata)",
+		"func_name": "tournament_create",
+		"params": "id, sort, operator, duration, reset, metadata, title, description, category, start_time, end_time, max_size, max_num_score, join_required",
+		"returns": null
+	},
+	"tournament_delete":
+	{
+		"args":
+		[
+			{
+				"details": "The unique identifier for the tournament to delete. Mandatory field.",
+				"name": "id",
+				"type": "string"
+			}
+		],
+		"desc": "Delete a tournament and all records that belong to it.",
+		"example": "local id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\"<br>nk.tournament_delete(id)",
+		"func_name": "tournament_delete",
+		"params": "id",
+		"returns": null
+	},
+	"tournament_join":
+	{
+		"args":
+		[
+		],
+		"desc": "A tournament may need to be joined before the owner can submit scores. This operation is idempotent and will always succeed for the owner even if they have already joined the tournament.",
+		"example": "local id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\"<br>local owner = \"leaderboard-record-owner\"<br>local username = \"myusername\"<br>nk.tournament_join(id, owner, username)",
+		"func_name": "tournament_join",
+		"params": "id, user_id, username",
+		"returns": null
+	},
+	"tournament_list":
+	{
+		"args":
+		[
+		],
+		"desc": "Find tournaments which have been created on the server. Tournaments can be filtered with categories and via start and end times. This function can also be used to see the tournaments that an owner (usually a user) has joined.",
+		"example": "local category_start = 1<br>local category_end = 2<br>local start_time = 1538147711<br>local end_time = 0 -- all tournaments from the start time<br>local limit = 100 -- number to list per page<br>local tournaments = nk.tournament_list(category_start, category_end, start_time, end_time, limit)<br>for i, row in ipairs(tournaments) do<br>  nk.logger_info(\"ID \" .. tournament.id .. \" - can enter? \" .. row.can_enter)<br>end",
+		"func_name": "tournament_list",
+		"params": "category_start, category_end, start_time, end_time, limit, cursor",
+		"returns": "A table of tournament objects."
+	},
+	"tournament_record_write":
+	{
+		"args":
+		[
+		],
+		"desc": "Submit a score and optional subscore to a tournament leaderboard. If the tournament has been configured with join required this will fail unless the owner has already joined the tournament.",
+		"example": "local metadata = {<br>  weather_conditions = \"rain\"<br>}<br>local id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\"<br>local owner = \"4c2ae592-b2a7-445e-98ec-697694478b1c\"<br>local username = \"02ebb2c8\"<br>local score = 10<br>local subscore = 0<br>nk.tournament_record_write(id, owner, username, score, subscore, metadata)",
+		"func_name": "tournament_record_write",
+		"params": "id, owner, username, score, subscore, metadata",
+		"returns": "A table of tournament record objects."
+	},
+	"tournament_records_haystack":
+	{
+		"args":
+		[
+		],
+		"desc": "Fetch the list of tournament records around the owner.",
+		"example": "local metadata = {<br>  weather_conditions = \"rain\"<br>}<br>local id = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\"<br>local owner = \"4c2ae592-b2a7-445e-98ec-697694478b1c\"<br>nk.tournament_records_haystack (id, owner, 10)",
+		"func_name": "tournament_records_haystack",
+		"params": "id, owner, limit",
+		"returns": "A table of tournament record objects."
+	},
+	"user_groups_list":
+	{
+		"args":
+		[
+			{
+				"details": "The Id of the user who\\'s groups you want to list.",
+				"name": "user_id",
+				"type": "string"
+			}
+		],
+		"desc": "List all groups which a user belongs to and whether they\\'ve been accepted into the group or if it\\'s an invite.",
+		"example": "local user_id = \"64ef6cb0-7512-11e7-9e52-d7789d80b70b\"<br>local groups = nk.user_groups_list(user_id)<br>for _, g in ipairs(groups)<br>do<br>  local msg = (\"Group name %q with id %q\"):format(g.name, g.id)<br>  print(msg)<br>end",
+		"func_name": "user_groups_list",
+		"params": "user_id",
+		"returns": "A list of groups for the user."
+	},
+	"users_ban_id":
+	{
+		"args":
+		[
+			{
+				"details": "A table array of user IDs to ban.",
+				"name": "user_ids",
+				"type": "table"
+			}
+		],
+		"desc": "Ban one or more users by ID. These users will no longer be allowed to authenticate with the server until unbanned.",
+		"example": "local user_ids = {<br>  \"3ea5608a-43c3-11e7-90f9-7b9397165f34\",<br>  \"447524be-43c3-11e7-af09-3f7172f05936\"<br>}<br>nk.users_ban_id(user_ids)",
+		"func_name": "users_ban_id",
+		"params": "user_ids",
+		"returns": null
+	},
+	"users_get_id":
+	{
+		"args":
+		[
+			{
+				"details": "A table array of user IDs to fetch.",
+				"name": "user_ids",
+				"type": "table"
+			}
+		],
+		"desc": "Fetch one or more users by ID.",
+		"example": "local user_ids = {<br>  \"3ea5608a-43c3-11e7-90f9-7b9397165f34\",<br>  \"447524be-43c3-11e7-af09-3f7172f05936\"<br>}<br>local users = nk.users_get_id(user_ids)<br>for _, u in ipairs(users)<br>do<br>  local message = (\"username: %q, displayname: %q\"):format(u.username, u.display_name)<br>  print(message)<br>end",
+		"func_name": "users_get_id",
+		"params": "user_ids",
+		"returns": "A table array of the user result set."
+	},
+	"users_get_username":
+	{
+		"args":
+		[
+			{
+				"details": "A table array of usernames to fetch.",
+				"name": "usernames",
+				"type": "table"
+			}
+		],
+		"desc": "Fetch a set of users by their usernames.",
+		"example": "local usernames = {\"b7865e7e\", \"c048ba7a\"}<br>local users = nk.users_get_username(usernames)<br>for _, u in ipairs(users)<br>do<br>  local message = (\"id: %q, displayname: %q\"):format(u.id, u.display_name)<br>  print(message)<br>end",
+		"func_name": "users_get_username",
+		"params": "usernames",
+		"returns": "A table array of the user result set."
+	},
+	"users_unban_id":
+	{
+		"args":
+		[
+			{
+				"details": "A table array of user IDs to unban.",
+				"name": "user_ids",
+				"type": "table"
+			}
+		],
+		"desc": "Unban one or more users by ID. These users will again be allowed to authenticate with the server.",
+		"example": "local user_ids = {<br>  \"3ea5608a-43c3-11e7-90f9-7b9397165f34\",<br>  \"447524be-43c3-11e7-af09-3f7172f05936\"<br>}<br>nk.users_unban_id(user_ids)",
+		"func_name": "users_unban_id",
+		"params": "user_ids",
+		"returns": null
+	},
+	"uuid_bytes_to_string":
+	{
+		"args":
+		[
+			{
+				"details": "The UUID bytes to convert.",
+				"name": "uuid_bytes",
+				"type": "string"
+			}
+		],
+		"desc": "Convert the 16-byte raw representation of a UUID into the equivalent 36-character standard UUID string representation. Will raise an error if the input is not valid and cannot be converted.",
+		"example": "local uuid_bytes = \"\\\\78\\\\196\\\\241\\\\38\\\\63\\\\157\\\\17\\\\231\\\\132\\\\239\\\\183\\\\193\\\\130\\\\179\\\\101\\\\33\" -- some uuid bytes.<br>local uuid_string = nk.uuid_bytes_to_string(uuid_bytes)<br>print(uuid_string)",
+		"func_name": "uuid_bytes_to_string",
+		"params": "uuid_bytes",
+		"returns": "A string containing the equivalent 36-character standard representation of the UUID."
+	},
+	"uuid_string_to_bytes":
+	{
+		"args":
+		[
+			{
+				"details": "The UUID string to convert.",
+				"name": "uuid_string",
+				"type": "string"
+			}
+		],
+		"desc": "Convert the 36-character string representation of a UUID into the equivalent 16-byte raw UUID representation. Will raise an error if the input is not valid and cannot be converted.",
+		"example": "local uuid_string = \"4ec4f126-3f9d-11e7-84ef-b7c182b36521\" -- some uuid string.<br>local uuid_bytes = nk.uuid_string_to_bytes(uuid_string)<br>print(uuid_bytes)",
+		"func_name": "uuid_string_to_bytes",
+		"params": "uuid_string",
+		"returns": "A string containing the equivalent 16-byte representation of the UUID. This function will also insert a new wallet ledger item into the user\\'s wallet history that trackes this update."
+	},
+	"uuid_v4":
+	{
+		"args": null,
+		"desc": "Generate a version 4 UUID in the standard 36-character string representation.",
+		"example": "local uuid = nk.uuid_v4()<br>print(uuid)",
+		"func_name": "uuid_v4",
+		"params": null,
+		"returns": "The generated version 4 UUID identifier."
+	},
+	"wallet_ledger_list":
+	{
+		"args":
+		[
+			{
+				"details": "The ID of the user to update the wallet for.",
+				"name": "user_id",
+				"type": "string"
+			}
+		],
+		"desc": "List all wallet updates for a particular user, from oldest to newest.",
+		"example": "local user_id = \"8f4d52c7-bf28-4fcf-8af2-1d4fcf685592\"<br>local updates = nk.wallet_ledger_list(user_id)<br>for _, u in ipairs(updates)<br>do<br>  local message = (\"found wallet update with id: %q\"):format(u.id)<br>  print(message)<br>end",
+		"func_name": "wallet_ledger_list",
+		"params": "user_id",
+		"returns": "A Lua table containing update operations with the following format:<br><br>```lua<br>{<br>  {<br>    id = \"...\",<br>    user_id = \"...\",<br>    create_time = 123,<br>    update_time = 123,<br>    changeset = {},<br>    metadata = {}<br>  }<br>}<br>```"
+	},
+	"wallet_ledger_update":
+	{
+		"args":
+		[
+		],
+		"desc": "Update the metadata for a particular wallet update in a users wallet ledger history. Useful when adding a note to a transaction for example.",
+		"example": "local id = \"2745ba53-4b43-4f83-ab8f-93e9b677f33a\"<br>local metadata = {<br>  updated = \"metadata\"<br>}<br>local u = nk.wallet_ledger_update(id, metadata",
+		"func_name": "wallet_ledger_update",
+		"params": "id, metadata",
+		"returns": "The updated wallet ledger item as a Lua table with the following format:<br><br>```lua<br>{<br>  id = \"...\",<br>  user_id = \"...\",<br>  create_time = 123,<br>  update_time = 456,<br>  changeset = {},<br>  metadata = {}<br>}<br>```"
+	},
+	"wallet_update":
+	{
+		"args":
+		[
+		],
+		"desc": "Update a user\\'s wallet with the given changeset.",
+		"example": "local user_id = \"8f4d52c7-bf28-4fcf-8af2-1d4fcf685592\"<br>local changeset = {<br>  coins = 10, -- Add 10 coins to the user\\'s wallet.<br>  gems = -5   -- Remove 5 gems from the user\\'s wallet.<br>}<br>local metadata = {}<br>nk.wallet_update(user_id, changeset, metadata, true)",
+		"func_name": "wallet_update",
+		"params": "user_id, changeset, metadata, update_ledger",
+		"returns": null
+	},
+	"wallets_update":
+	{
+		"args":
+		[
+		],
+		"desc": "Update one or more user wallets with individual changesets. This function will also insert a new wallet ledger item into each user\\'s wallet history that trackes their update.<br><br>All updates will be performed atomically.",
+		"example": "local updates = {<br>  {<br>    user_id = \"8f4d52c7-bf28-4fcf-8af2-1d4fcf685592\",<br>    changeset = {<br>      coins = 10, -- Add 10 coins to the user\\'s wallet.<br>      gems = -5   -- Remove 5 gems from the user\\'s wallet.<br>    },<br>    metadata = {}<br>  }<br>}<br>nk.wallets_update(updates, true)",
+		"func_name": "wallets_update",
+		"params": "updates, update_ledger",
+		"returns": null
+	}
+}

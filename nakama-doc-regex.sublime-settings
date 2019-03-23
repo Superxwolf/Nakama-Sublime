@@ -1,0 +1,22 @@
+{
+	//__([a-z\d_]*) \(([a-z_,\d ]*)\)__\n\n([^\x00]*?(?=(_Param|_Ex|_Ret)))(_Parameters_\n\n.*\n.*\n([^\x00]*?(?=(_Ex|_Ret))))?(_Returns_\n([^\x00]*?(?=_Ex)))?_Example_\n\n```lua([^\x00]*?(?=```))```
+	"regex": "__([a-z\\d_]*) \\(([a-z_,\\d ]*)\\)__\\n\\n([^\\x00]*?(?=(_Param|_Ex|_Ret)))(_Parameters_\\n\\n.*\\n.*\\n([^\\x00]*?(?=(_Ex|_Ret))))?(_Returns_\\n([^\\x00]*?(?=_Ex)))?_Example_\\n\\n```lua([^\\x00]*?(?=```))```",
+
+	// $1 function name
+	// $2 arguments
+	// $3 Description
+	// $6 Argument Description
+	// $9 Return Description
+	// $10 Example
+
+	"format": "$1: { 'params': $2, 'desc': $3, 'args': $6, returns: $9, example: $10 },",
+	"params":
+	{
+		"func_name": 0,
+		"params": 1,
+		"desc": 2,
+		"args": 5,
+		"returns": 8,
+		"example": 9
+	}
+}
