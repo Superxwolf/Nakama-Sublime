@@ -17,7 +17,8 @@ def strip_newlines(x):
 # Parse parameters details from the table format
 def parse_args(args):
 	arg_list = []
-	for line in args.split('\n'):
+
+	for line in args.split('<br>'):
 		parts = line.split('|')
 		if len(parts) == 5:
 			arg_list.append({
@@ -27,6 +28,14 @@ def parse_args(args):
 				})
 
 	return arg_list
+
+def args_to_params_type(args):
+	param_list = []
+
+	for a in args:
+		param_list.append("{} {}".format(a['type'], a['name']))
+
+	return ', '.join(param_list)
 
 class NakamaDocFetchCommand(sublime_plugin.TextCommand):
 	def get_setting(self, key, default=None):
@@ -61,17 +70,20 @@ class NakamaDocFetchCommand(sublime_plugin.TextCommand):
 
 		matches = re.findall(regex_pattern, doc_text)
 		api_functions = self.get_doc_settings();
+
 		for m in matches:
-			cur_func = {}
+			cur_func = {"param_types": None}
+
 			for k in param_keys:
 				cur_val = strip_newlines(m[param_indexes[k]])
 				if cur_val == '': cur_val = None
 				else: cur_val = cur_val.replace('\n', '<br>')
 				cur_func[k] = cur_val
 
-			if cur_func['args'] is not None: cur_func['args'] = parse_args(cur_func['args'])
+			if cur_func['args'] is not None: 
+				cur_func['args'] = parse_args(cur_func['args'])
+				cur_func['param_types'] = args_to_params_type(cur_func['args'])
 			api_functions.set(m[param_indexes['func_name']], cur_func)
-
 		self.save_doc_settings()
 
 		print("Finished loading Nakama doc")

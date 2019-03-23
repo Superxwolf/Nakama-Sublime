@@ -9,7 +9,7 @@ import urllib.request
 
 TEMPLATE = """
 	<p>Nakama Function</p>
-	<p><b>{func_name}</b> ({params})</p>
+	<p><b>{func_name}</b> ({param_types})</p>
 	<h4>Description:</h4>
 	<p>{desc}</p>
 	<h4>Example:</h4>
