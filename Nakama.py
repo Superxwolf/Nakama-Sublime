@@ -6,7 +6,9 @@ import sublime
 import sublime_plugin
 import re
 import urllib.request
+import functools
 
+# Popup template for on hover documentation
 TEMPLATE = """
 	<p>Nakama Function</p>
 	<p><b>{func_name}</b> ({param_types})</p>
@@ -17,6 +19,50 @@ TEMPLATE = """
 	"""
 
 class NakamaCompletionEvent(sublime_plugin.EventListener):
+
+	# Setting for the current view
+	_is_lua = False
+	has_nakama = False
+	cur_nakama_var = ""
+	cur_nakama_line = -1
+
+	# Keep count for idle execution
+	timeout = 0
+    
+	def handle_timeout(self, view):
+		self.timeout = self.timeout - 1
+
+		# Keep the loop running
+		if self.timeout > 0:
+			sublime.set_timeout_async(functools.partial(self.handle_timeout, view), 500)
+
+		else: self.on_idle(view)
+
+	# Start or reset the timer on document modification
+	def on_modified_async(self, view):
+		if not self.is_lua(view):
+			# Not Lua, don't do anything.
+			return
+
+		# If document was changed to Nakama after view focus, search for nakama
+		if not self._is_lua:
+			find_nakama_var(view)
+			self._is_lua = True
+
+		# Start idle timer loop if none is running
+		if self.timeout == 0: 
+			sublime.set_timeout_async(functools.partial(self.handle_timeout, view), 500)
+
+		# Set timer to 1 seconds, 2 ticks of 500ms
+		self.timeout = 2
+        
+    # Find Nakama var when idle times out
+	def on_idle(self, view):
+		self.find_nakama_var(view)
+
+	def is_lua(self, view):
+		return view.settings().get("syntax") == "Packages/Lua/Lua.sublime-syntax"
+
 	def get_setting(self, key, default=None):
 		settings = sublime.load_settings('nakama-completion.sublime-settings')
 		if settings:
@@ -31,9 +77,31 @@ class NakamaCompletionEvent(sublime_plugin.EventListener):
 		else:
 			return default
 
+	def get_nakama_var(self):
+		return self.cur_nakama_var
+
+	def find_nakama_var(self, view):
+		var_region = view.find(r"""local [^\s]+ = require[\s\(]+['"]nakama['"]""", 0)
+		if var_region.a == -1:
+			self.has_nakama = False
+			return
+
+		match = re.search(r"""local ([^\s]+) = require[\s\(]+['"]nakama['"]""", view.substr(var_region))
+		self.cur_nakama_var = match.group(1)
+		self.cur_nakama_line = view.rowcol(var_region.a)[0]
+		self.has_nakama = True
+
+	# Search for nakama on view focus
+	def on_activated_async(self, view):
+		self._is_lua = self.is_lua(view)
+		if self._is_lua:
+			self.find_nakama_var(view)
+		else:
+			self.has_nakama = False
+
 	def on_query_completions(self, view, prefix, locations):
-		if view.settings().get("syntax") != "Packages/Lua/Lua.sublime-syntax":
-			# Not Lua, don't do anything.
+		if not self._is_lua or not self.has_nakama:
+			# Not Lua or nakama present, don't do anything.
 			return
 
 		# Get where the current word begins and ends
@@ -44,22 +112,11 @@ class NakamaCompletionEvent(sublime_plugin.EventListener):
 		# Check if we're autocompleting from a dot
 		if view.substr(sublime.Region(start_location-1, start_location)) != '.':
 			return
-		
-		# Get all the document from start to current point
-		src = view.substr(sublime.Region(0, start_location))
-
-		# Check if nakama is included, and which variable is it saved to
-		# match = re.search(r"""(local)?\s+([^\s]+)\s+=\s+require[\s\(]+['"]nakama['"][\s\)]*""", src)
-		match = re.search(r"""local ([^\s]+) = require[\s\(]+['"]nakama['"]*""", src)
-
-		if match is None:
-			#nakama not included
-			return
 
 		# Get the nakama variable name
-		nakama_var = match.group(1)
+		nakama_var = self.get_nakama_var()
 
-		# Get variable name before the dot in the current context
+		# Get the word before the dot
 		class_var = view.substr(view.word(start_location-2))
 
 		if nakama_var != class_var:
@@ -73,21 +130,22 @@ class NakamaCompletionEvent(sublime_plugin.EventListener):
 
 	def on_hover(self, view, point, hover_zone):
 
-		if hover_zone != sublime.HOVER_TEXT:
+		if hover_zone != sublime.HOVER_TEXT or not self.has_nakama:
 			return
 
+		# Get start and finish for current hovered word
 		word_location = view.word(point)
 		start_location = word_location.a
 		end_location = word_location.b
 
+		# Get the entire current hovered word
 		cur_word = view.substr(word_location)
 
+		# Check for current hovered word in documentation function list
 		entry = self.get_doc_entry(cur_word, None)
 
 		if entry is None:
 			return
-
-		# print("Nakama doc found")
 
 		view.show_popup(TEMPLATE.format(**entry),
 			sublime.HIDE_ON_MOUSE_MOVE_AWAY, point, *view.viewport_extent())
