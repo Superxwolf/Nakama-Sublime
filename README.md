@@ -11,6 +11,10 @@ All functions support on hover documentation. Documentation was extracted from n
 
 ## Install
 
+#### [Package Control](https://packagecontrol.io/installation)
+
+Using Package Control: `Ctrl + Shift + P -> Package Control: Install Package -> Nakama Autocomplete`
+
 #### Manual
 Download or clone the repository to your package folder.
 
