@@ -1,5 +1,5 @@
 # Nakama Autocomplete
-This is a Sublime Text plugin for Nakama which includes all server documentation.
+This is a Sublime Text plugin for [Nakama](https://heroiclabs.com/) which includes all server documentation.
 
 It's compose of two modules, regular and realtime functions.
 
