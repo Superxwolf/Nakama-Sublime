@@ -1,0 +1,18 @@
+{
+	"autocomplete":
+	[
+		["match_init\tNakama Realtime", "match_init(${1:context}, ${2:params})\n\t${0}\nend"],
+		["match_join\tNakama Realtime", "match_join(${1:context}, ${2:dispatcher}, ${3:tick}, ${4:state}, ${5:presences})\n\t${0}\nend"],
+		["match_join_attempt\tNakama Realtime", "match_join_attempt(${1:context}, ${2:dispatcher}, ${3:tick}, ${4:state}, ${5:presences})\n\t${0}\nend"],
+		["match_leave\tNakama Realtime", "match_leave(${1:context}, ${2:dispatcher}, ${3:tick}, ${4:state}, ${5:presences})\n\t${0}\nend"],
+		["match_loop\tNakama Realtime", "match_loop(${1:context}, ${2:dispatcher}, ${3:tick}, ${4:state}, ${5:presences})\n\t${0}\nend"],
+		["match_terminate\tNakama Realtime", "match_terminate(${1:context}, ${2:dispatcher}, ${3:tick}, ${4:state}, ${5:grace_seconds})\n\t${0}\nend"]
+	],
+
+	"autocomplete-dispatcher":
+	[
+		["broadcast_message\tNakama Realtime", "broadcast_message(${1:op_code}, ${2:data}, ${3:presences}, ${3:sender})"],
+		["match_kick\tNakama Realtime", "match_kick(${1:presences})"],
+		["match_label_update\tNakama Realtime", "match_label_update(${1:label})"],
+	]
+}

@@ -1,0 +1,283 @@
+{
+	"broadcast_message":
+	{
+		"args":
+		[
+			{
+				"details": "Numeric message op code.",
+				"name": "op_code",
+				"type": "number"
+			},
+			{
+				"details": "Data payload string, or nil.",
+				"name": "data",
+				"type": "string"
+			},
+			{
+				"details": "List of presences (a subset of match participants) to use as message targets, or nil to send to the whole match.",
+				"name": "presences",
+				"type": "table"
+			},
+			{
+				"details": "A presence to tag on the message as the \\'sender\\', or nil.",
+				"name": "sender",
+				"type": "table"
+			}
+		],
+		"desc": "Send a message to one or more presences.<br><br>This may be called at any point in the match loop to give match participants information about match state changes.<br><br>May also be useful inside the match join callback to send initial state to the user on successful join or inform them why they have been rejected.",
+		"example": "fct_label=\"Lua\"<br>local nk = require(\"nakama\")<br>function match_loop(context, dispatcher, tick, state, messages)<br>  local opcode = 1234<br>  local message = { [\"hello\"] = \"world\" }<br>  local encoded = nk.json_encode(message)<br>  local presences = nil -- send to all.<br>  local sender = nil -- used if a message should come from a specific user.<br>  dispatcher.broadcast_message(opcode, encoded, presences, sender)<br>  return state<br>end",
+		"func_name": "broadcast_message",
+		"param_types": "number op_code, string data, table presences, table sender",
+		"params": "op_code, data, presences, sender"
+	},
+	"match_init":
+	{
+		"args":
+		[
+			{
+				"details": "[Context object](runtime-code-basics.md#register-hooks) represents information about the match and server for information purposes.",
+				"name": "context",
+				"type": "table"
+			},
+			{
+				"details": "Optional arbitrary second argument passed to `match_create()`, or `nil` if none was used. This can be matched users or any other data you\\'d like to pass into this function.",
+				"name": "params",
+				"type": "table"
+			}
+		],
+		"desc": "This is invoked when a match is created as a result of the match create function and sets up the initial state of a match. This will be called once at match start.",
+		"example": "fct_label=\"Lua\"<br>function match_init(context, params)<br>  local state = {}<br>  local tick_rate = 1<br>  local label = \"skill=100-150\"<br><br>  return state, tick_rate, label<br>end",
+		"func_name": "match_init",
+		"param_types": "table context, table params",
+		"params": "context, params",
+		"returns": "state, tickrate, label",
+		"returns2": "(table) - The initial in-memory state of the match. May be any non-nil Lua term, or nil to end the match.<br>(number) - Tick rate representing the desired number of `match_loop()` calls per second. Must be between 1 and 30, inclusive.<br>(string) - A string label that can be used to filter matches in listing operations. Must be between 0 and 256 characters long. This is used in [match listing](#match-listing) to filter matches."
+	},
+	"match_join":
+	{
+		"args":
+		[
+			{
+				"details": "[Context object](runtime-code-basics.md#register-hooks) represents information about the match and server for information purposes.",
+				"name": "context",
+				"type": "table"
+			},
+			{
+				"details": "[Dispatcher](#match-runtime-api) exposes useful functions to the match.",
+				"name": "dispatcher",
+				"type": "table"
+			},
+			{
+				"details": "Tick is the current match tick number, starts at 0 and increments after every `match_loop` call. Does not increment with calls to `match_join_attempt`, `match_join`, or `match_leave`.",
+				"name": "tick",
+				"type": "number"
+			},
+			{
+				"details": "The current in-memory match state, may be any Lua term except nil.",
+				"name": "state",
+				"type": "table"
+			},
+			{
+				"details": "Presences is a list of users that have joined the match.",
+				"name": "presences",
+				"type": "table"
+			}
+		],
+		"desc": "Executed when one or more users have successfully completed the match join process after their `match_join_attempt()` returns<br>`true`. When their presences are sent to this function the users are ready to receive match data messages and can be<br>targets for the dispatcher\\'s `broadcast_message()` function.",
+		"example": "fct_label=\"Lua\"<br>local function match_join(context, dispatcher, tick, state, presences)<br>  -- Presences format:<br>  -- {<br>  --   {<br>  --     user_id = \"user unique ID\",<br>  --     session_id = \"session ID of the user\\'s current connection\",<br>  --     username = \"user\\'s unique username\",<br>  --     node = \"name of the Nakama node the user is connected to\"<br>  --   },<br>  --  ...<br>  -- }<br>  return state<br>end",
+		"func_name": "match_join",
+		"param_types": "table context, table dispatcher, number tick, table state, table presences",
+		"params": "context, dispatcher, tick, state, presences",
+		"returns": "state",
+		"returns2": "(table) - An (optionally) updated state. May be any non-nil Lua term, or nil to end the match."
+	},
+	"match_join_attempt":
+	{
+		"args":
+		[
+			{
+				"details": "[Context object](runtime-code-basics.md#register-hooks) represents information about the match and server for information purposes.",
+				"name": "context",
+				"type": "table"
+			},
+			{
+				"details": "[Dispatcher](#match-runtime-api) exposes useful functions to the match.",
+				"name": "dispatcher",
+				"type": "table"
+			},
+			{
+				"details": "Tick is the current match tick number, starts at 0 and increments after every `match_loop` call. Does not increment with calls to `match_join_attempt`, `match_join`, or `match_leave`.",
+				"name": "tick",
+				"type": "number"
+			},
+			{
+				"details": "The current in-memory match state, may be any Lua term except nil.",
+				"name": "state",
+				"type": "table"
+			},
+			{
+				"details": "Presence is the user attempting to join the match.",
+				"name": "presence",
+				"type": "table"
+			},
+			{
+				"details": "Optional metadata arbitrary string key-value pairs received from the client as part of the join request.",
+				"name": "metadata",
+				"type": "table"
+			}
+		],
+		"desc": "Executed when a user attempts to join the match using the client\\'s match join operation. Match join attempt can be used to prevent more players from joining after a match has started or disallow the user for any other game specific reason.",
+		"example": "fct_label=\"Lua\"<br>local function match_join_attempt(context, dispatcher, tick, state, presence, metadata)<br>  -- Presence format:<br>  -- {<br>  --   user_id = \"user unique ID\",<br>  --   session_id = \"session ID of the user\\'s current connection\",<br>  --   username = \"user\\'s unique username\",<br>  --   node = \"name of the Nakama node the user is connected to\"<br>  -- }<br>  return state, true<br>end",
+		"func_name": "match_join_attempt",
+		"param_types": "table context, table dispatcher, number tick, table state, table presence, table metadata",
+		"params": "context, dispatcher, tick, state, presence, metadata",
+		"returns": "state, accepted, reject_reason",
+		"returns2": "(table) - An (optionally) updated state. May be any non-nil Lua term, or nil to end the match.<br>(boolean) - True if the join attempt should be allowed, false otherwise.<br>(string) - If the join attempt should be rejected, an optional string rejection reason can be returned to the client."
+	},
+	"match_kick":
+	{
+		"args":
+		[
+			{
+				"details": "List of presences to remove from the match.",
+				"name": "presences",
+				"type": "table"
+			}
+		],
+		"desc": "Removes participants from the match.<br><br>Call at any point during the match loop to remove participants based on misbehaviour or other game-specific rules.",
+		"example": "fct_label=\"Lua\"<br>local nk = require(\"nakama\")<br>function match_loop(context, dispatcher, tick, state, messages)<br>  -- Assume we store presences in state<br>  for i, presence in ipairs(state.presences) do<br>    dispatcher.match_kick(presence)<br>  end<br>  return state<br>end",
+		"func_name": "match_kick",
+		"param_types": "table presences",
+		"params": "presences"
+	},
+	"match_label_update":
+	{
+		"args":
+		[
+			{
+				"details": "New label to set for the match.",
+				"name": "label",
+				"type": "string"
+			}
+		],
+		"desc": "Sets a new label for the match.",
+		"example": "local nk = require(\"nakama\")<br>function match_loop(context, dispatcher, tick, state, messages)<br>  dispatcher.match_label_update(\"updatedlabel\")<br>  return state<br>end",
+		"func_name": "match_label_update",
+		"param_types": "string label",
+		"params": "label"
+	},
+	"match_leave":
+	{
+		"args":
+		[
+			{
+				"details": "[Context object](runtime-code-basics.md#register-hooks) represents information about the match and server for information purposes.",
+				"name": "context",
+				"type": "table"
+			},
+			{
+				"details": "[Dispatcher](#match-runtime-api) exposes useful functions to the match.",
+				"name": "dispatcher",
+				"type": "table"
+			},
+			{
+				"details": "Tick is the current match tick number, starts at 0 and increments after every `match_loop` call. Does not increment with calls to `match_join_attempt`, `match_join`, or `match_leave`.",
+				"name": "tick",
+				"type": "number"
+			},
+			{
+				"details": "The current in-memory match state, may be any Lua term except nil.",
+				"name": "state",
+				"type": "table"
+			},
+			{
+				"details": "Presences is a list of users that have joined the match.",
+				"name": "presences",
+				"type": "table"
+			}
+		],
+		"desc": "Executed when one or more users have left the match for any reason including connection loss.",
+		"example": "fct_label=\"Lua\"<br>local function match_leave(context, dispatcher, tick, state, presences)<br>  return state<br>end",
+		"func_name": "match_leave",
+		"param_types": "table context, table dispatcher, number tick, table state, table presences",
+		"params": "context, dispatcher, tick, state, presences",
+		"returns": "state",
+		"returns2": "(table) - An (optionally) updated state. May be any non-nil Lua term or nil to end the match."
+	},
+	"match_loop":
+	{
+		"args":
+		[
+			{
+				"details": "[Context object](runtime-code-basics.md#register-hooks) represents information about the match and server for information purposes.",
+				"name": "context",
+				"type": "table"
+			},
+			{
+				"details": "[Dispatcher](#match-runtime-api) exposes useful functions to the match.",
+				"name": "dispatcher",
+				"type": "table"
+			},
+			{
+				"details": "Tick is the current match tick number starts at 0 and increments after every `match_loop` call. Does not increment with calls to `match_join_attempt`, `match_join`, or `match_leave`.",
+				"name": "tick",
+				"type": "number"
+			},
+			{
+				"details": "The current in-memory match state, may be any Lua term except nil.",
+				"name": "state",
+				"type": "table"
+			},
+			{
+				"details": "Messages is a list of data messages received from users between the previous and current tick.",
+				"name": "messages",
+				"type": "table"
+			}
+		],
+		"desc": "Executed on an interval based on the tick rate returned by `match_init`. Each tick the match loop is run which can process messages received from clients and apply changes to the match state before the next tick. It can also dispatch messages to one or more connected opponents.<br><br>To send messages back to the opponents in the match you can keep track of them in the game state and use the dispatcher object to send messages to subsets of the users or all of them.",
+		"example": "fct_label=\"Lua\"<br>local function match_loop(context, dispatcher, tick, state, messages)<br>  -- Messages format:<br>  -- {<br>  --   {<br>  --     sender = {<br>  --       user_id = \"user unique ID\",<br>  --       session_id = \"session ID of the user\\'s current connection\",<br>  --       username = \"user\\'s unique username\",<br>  --       node = \"name of the Nakama node the user is connected to\"<br>  --     },<br>  --     op_code = 1, -- numeric op code set by the sender.<br>  --     data = \"any string data set by the sender\" -- may be nil.<br>  --   },<br>  --   ...<br>  -- }<br>  return state<br>end",
+		"func_name": "match_loop",
+		"param_types": "table context, table dispatcher, number tick, table state, table messages",
+		"params": "context, dispatcher, tick, state, messages",
+		"returns": "state",
+		"returns2": "(table) - An (optionally) updated state. May be any non-nil Lua term, or nil to end the match."
+	},
+	"match_terminate":
+	{
+		"args":
+		[
+			{
+				"details": "[Context object](runtime-code-basics.md#register-hooks) represents information about the match and server for information purposes.",
+				"name": "context",
+				"type": "table"
+			},
+			{
+				"details": "[Dispatcher](#match-runtime-api) exposes useful functions to the match.",
+				"name": "dispatcher",
+				"type": "table"
+			},
+			{
+				"details": "Tick is the current match tick number starts at 0 and increments after every `match_loop` call. Does not increment with calls to `match_join_attempt`, `match_join`, or `match_leave`.",
+				"name": "tick",
+				"type": "number"
+			},
+			{
+				"details": "The current in-memory match state, may be any Lua term except nil.",
+				"name": "state",
+				"type": "table"
+			},
+			{
+				"details": "The number of seconds before the server will shut down. All match handler work must be completed before that time elapses, and the match will end regardless.",
+				"name": "grace_seconds",
+				"type": "number"
+			}
+		],
+		"desc": "Called when the server begins a [graceful shutdown](install-configuration.md#server-configuration) process. Will not be called if graceful shutdown is disabled.<br><br>The match should attempt to complete any processing before the given number of seconds elapses, and optionally send a message to clients to inform them the server is shutting down.<br><br>When the grace period expires the match will be forcefully closed if it is still running, clients will be disconnected, and the server will shut down.",
+		"example": "fct_label=\"Lua\"<br>local function match_terminate(context, dispatcher, tick, state, grace_seconds)<br>  return state<br>end",
+		"func_name": "match_terminate",
+		"param_types": "table context, table dispatcher, number tick, table state, number grace_seconds",
+		"params": "context, dispatcher, tick, state, grace_seconds",
+		"returns": "state",
+		"returns2": "(table) - An (optionally) updated state. May be any non-nil Lua term, or nil to end the match."
+	}
+}

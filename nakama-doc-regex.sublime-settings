@@ -18,5 +18,39 @@
 		"args": 5,
 		"returns": 8,
 		"example": 9
-	}
+	},
+
+	//__(.*?)\((.*?)\) -> (.*?(?=__))__\n\n([^\x00]*?(?=_Para))_Parameters_\n\n\| Param \| Type \| Description \|\n\| ----- \| ---- \| ----------- \|([^\x00]*?(?=_Ret))_Returns_\n\n.*\n\n([^\x00]*?(?=_Ex))_Example_\n\n```lua ([^\x00]*?(?=```))
+	"regex-rt": "__(.*?)\\((.*?)\\) -> (.*?(?=__))__\\n\\n([^\\x00]*?(?=_Para))_Parameters_\\n\\n\\| Param \\| Type \\| Description \\|\\n\\| ----- \\| ---- \\| ----------- \\|([^\\x00]*?(?=_Ret))_Returns_\\n\\n.*\\n\\n([^\\x00]*?(?=_Ex))_Example_\\n\\n```lua ([^\\x00]*?(?=```))",
+
+	// $1 function name
+	// $2 arguments
+	// $4 Description
+	// $5 Argument Description
+	// $3 Returns
+	// $6 Returns Details
+	// $7 Example
+	"format-rt": "$1: { 'params': $2, 'desc': $4, 'args': $5, returns: $3, example: $7 }",
+	"params-rt":
+	{
+		"func_name": 0,
+		"params": 1,
+		"desc": 3,
+		"args": 4,
+		"returns": 2,
+		"returns2": 5,
+		"example": 6
+	},
+
+	//__(.*?)\((.*?)\)__\n\n([^\x00]*?(?=_Para))_Parameters_\n\n\| Param \| Type \| Description \|\n\| ----- \| ---- \| ----------- \|([^\x00]*?(?=_Exa))_Example_\n\n```lua ?([^\x00]*?(?=```))
+	"regex-rt-dispatcher": "__(.*?)\\((.*?)\\)__\\n\\n([^\\x00]*?(?=_Para))_Parameters_\\n\\n\\| Param \\| Type \\| Description \\|\\n\\| ----- \\| ---- \\| ----------- \\|([^\\x00]*?(?=_Exa))_Example_\\n\\n```lua ?([^\\x00]*?(?=```))",
+	"format-rt-dispatcher": "$1: { 'params': $2, 'desc': $3, 'args': $4, example: $5 }",
+	"params-rt-dispatcher":
+	{
+		"func_name": 0,
+		"params": 1,
+		"desc": 2,
+		"args": 3,
+		"example": 4
+	},
 }
