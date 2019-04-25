@@ -61,7 +61,7 @@ class NakamaCompletionEvent(sublime_plugin.EventListener):
 		self.find_nakama_var(view)
 
 	def is_lua(self, view):
-		return view.settings().get("syntax") == "Packages/Lua/Lua.sublime-syntax"
+		return view.match_selector(0, 'source.lua')
 
 	def get_setting(self, key, default=None):
 		settings = sublime.load_settings('nakama-completion.sublime-settings')
