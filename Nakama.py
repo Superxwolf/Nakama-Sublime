@@ -61,7 +61,8 @@ class NakamaCompletionEvent(sublime_plugin.EventListener):
 		self.find_nakama_var(view)
 
 	def is_lua(self, view):
-		return view.match_selector(0, 'source.lua')
+		# Some plugins modify scope name, check if 'source.lua' is in the scope name
+		return 'source.lua' in view.scope_name(0)
 
 	def get_setting(self, key, default=None):
 		settings = sublime.load_settings('nakama-completion.sublime-settings')
