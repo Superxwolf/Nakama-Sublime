@@ -143,4 +143,4 @@ class NakamaCompletionEvent(sublime_plugin.ViewEventListener):
 			return
 
 		self.view.show_popup(TEMPLATE.format(**entry),
-			sublime.HIDE_ON_MOUSE_MOVE_AWAY, point, *view.viewport_extent())
+			sublime.HIDE_ON_MOUSE_MOVE_AWAY, point, *self.view.viewport_extent())
