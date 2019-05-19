@@ -51,6 +51,12 @@ class NakamaDocFetchCommand(sublime_plugin.TextCommand):
 	def save_doc_settings(self):
 		sublime.save_settings('nakama-doc.sublime-settings')
 
+	def get_context_doc_settings(self):
+		return sublime.load_settings('nakama-context-doc.sublime-settings')
+
+	def save_context_doc_settings(self):
+		sublime.save_settings('nakama-context-doc.sublime-settings')
+
 	def fetch_doc(self):
 		print("Fetching Nakama Doc...")
 		try:
@@ -84,9 +90,41 @@ class NakamaDocFetchCommand(sublime_plugin.TextCommand):
 				cur_func['args'] = parse_args(cur_func['args'])
 				cur_func['param_types'] = args_to_params_type(cur_func['args'])
 			api_functions.set(m[param_indexes['func_name']], cur_func)
+			
 		self.save_doc_settings()
 
 		print("Finished loading Nakama doc")
 
+	def fetch_context_doc(self):
+		print("Fetching Nakama Context Doc...")
+		try:
+			doc_response = urllib.request.urlopen('https://raw.githubusercontent.com/heroiclabs/nakama-docs/master/docs/runtime-code-basics.md')
+		except Exception as e:
+			print("Could not fetch Nakama context docs")
+			return
+
+		doc_text = str(doc_response.read())
+
+		# Change text \n to actual new lines so that regex behaves nicely
+		doc_text = doc_text.replace("\\n", "\n")
+
+		context_start = doc_text.find("| Field | Purpose |\n| ----- | ------- |\n") + 40
+		context_end = doc_text.find("|\n\n", context_start) + 2
+
+		doc_text = doc_text[context_start:context_end]
+
+		regex_pattern = self.get_setting('regex-context')
+
+		matches = re.findall(regex_pattern, doc_text)
+		api_vars = self.get_context_doc_settings();
+
+		for m in matches:
+			api_vars.set(m[0], {"name": m[0], "description": m[1]})
+
+		self.save_context_doc_settings()
+
+		print("Finished loading Nakama context doc")
+
 	def run(self, edit):
 		sublime.set_timeout_async(self.fetch_doc, 0)
+		sublime.set_timeout_async(self.fetch_context_doc, 0)

@@ -18,6 +18,11 @@ TEMPLATE = """
 	{example}
 	"""
 
+CONTEXT_TEMPLATE = """
+	<p>Nakama Context Var</p>
+	<p><b>{description}</b></p>
+	"""
+
 class NakamaCompletionEvent(sublime_plugin.ViewEventListener):
 
 	# Setting for the current view
@@ -72,6 +77,10 @@ class NakamaCompletionEvent(sublime_plugin.ViewEventListener):
 		settings = sublime.load_settings('nakama-doc.sublime-settings')
 		return settings.get(key, default)
 
+	def get_context_doc_entry(self, key, default=None):
+		settings = sublime.load_settings('nakama-context-doc.sublime-settings')
+		return settings.get(key, default)
+
 	def get_nakama_var(self):
 		return self.cur_nakama_var
 
@@ -86,13 +95,20 @@ class NakamaCompletionEvent(sublime_plugin.ViewEventListener):
 		self.cur_nakama_line = self.view.rowcol(var_region.a)[0]
 		self.has_nakama = True
 
-	# Search for nakama on view focus
-	def on_load_async(self):
+	def check_document(self):
 		self._is_lua = self.is_lua()
 		if self._is_lua:
 			self.find_nakama_var()
 		else:
 			self.has_nakama = False
+
+	# Search for nakama on load
+	def on_load_async(self):
+		self.check_document()
+
+	# Search for nakama on view focus
+	def on_activated_async(self):
+		self.check_document()
 
 	def on_query_completions(self, prefix, locations):
 		if not self._is_lua or not self.has_nakama:
@@ -114,17 +130,18 @@ class NakamaCompletionEvent(sublime_plugin.ViewEventListener):
 		# Get the word before the dot
 		class_var = self.view.substr(self.view.word(start_location-2))
 
-		if nakama_var != class_var:
-			# Not using the nakama variable
-			return
+		if class_var == nakama_var:
+			return (
+				self.get_setting('autocomplete'),
+				sublime.INHIBIT_WORD_COMPLETIONS | sublime.INHIBIT_EXPLICIT_COMPLETIONS
+			)
 
-		return (
-			self.get_setting('autocomplete'),
-			sublime.INHIBIT_WORD_COMPLETIONS | sublime.INHIBIT_EXPLICIT_COMPLETIONS
-		)
+		elif class_var == "context":
+			return (
+				self.get_setting('autocomplete-context')
+			)
 
 	def on_hover(self, point, hover_zone):
-
 		if hover_zone != sublime.HOVER_TEXT or not self.has_nakama:
 			return
 
@@ -136,11 +153,36 @@ class NakamaCompletionEvent(sublime_plugin.ViewEventListener):
 		# Get the entire current hovered word
 		cur_word = self.view.substr(word_location)
 
+		# Check if we're autocompleting from a dot
+		if self.view.substr(sublime.Region(start_location-1, start_location)) != '.':
+			return
+
+		# Get the word before the dot
+		class_var = self.view.substr(self.view.word(start_location-2))
+
 		# Check for current hovered word in documentation function list
 		entry = self.get_doc_entry(cur_word, None)
 
-		if entry is None:
-			return
+		# Get the nakama variable name
+		nakama_var = self.get_nakama_var()
 
-		self.view.show_popup(TEMPLATE.format(**entry),
-			sublime.HIDE_ON_MOUSE_MOVE_AWAY, point, *self.view.viewport_extent())
+		if class_var == nakama_var:
+			# Check for current hovered word in documentation function list
+			entry = self.get_doc_entry(cur_word, None)
+
+			if entry is None:
+				return
+
+			self.view.show_popup(TEMPLATE.format(**entry),
+				sublime.HIDE_ON_MOUSE_MOVE_AWAY, point, *self.view.viewport_extent())
+
+		elif class_var == "context":
+			
+			# Check for current hovered word in documentation context list
+			entry = self.get_context_doc_entry(cur_word, None)
+
+			if entry is None:
+				return
+
+			self.view.show_popup(CONTEXT_TEMPLATE.format(**entry),
+				sublime.HIDE_ON_MOUSE_MOVE_AWAY, point, *self.view.viewport_extent())

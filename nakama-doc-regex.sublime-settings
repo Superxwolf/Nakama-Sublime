@@ -53,4 +53,7 @@
 		"args": 3,
 		"example": 4
 	},
+
+	//\| `context\.(.*)?` \| (.*) \|\n
+	"regex-context": "\\| `context\\.(.*)?` \\| (.*) \\|\n",
 }

@@ -1,0 +1,67 @@
+{
+	"client_ip":
+	{
+		"description": "The IP address of the client making the request.",
+		"name": "client_ip"
+	},
+	"client_port":
+	{
+		"description": "The port number of the client making the request.",
+		"name": "client_port"
+	},
+	"env":
+	{
+		"description": "A table of key/value pairs which are defined in the YAML [configuration](install-configuration.md) of the server. This is useful to store API keys and other secrets which may be different between servers run in production and in development.",
+		"name": "env"
+	},
+	"execution_mode":
+	{
+		"description": "The mode associated with the execution context. It\\'s one of these values: \"run_once\", \"rpc\", \"before\", \"after\", \"match\", \"matchmaker\", \"leaderboard_reset\", \"tournament_reset\", \"tournament_end\".",
+		"name": "execution_mode"
+	},
+	"match_id":
+	{
+		"description": "The match ID that is currently being executed. Only applicable to server authoritative multiplayer.",
+		"name": "match_id"
+	},
+	"match_label":
+	{
+		"description": "Labels associated with the match. Only applicable to server authoritative multiplayer.",
+		"name": "match_label"
+	},
+	"match_node":
+	{
+		"description": "The node ID that the match is being executed on. Only applicable to server authoritative multiplayer.",
+		"name": "match_node"
+	},
+	"match_tick_rate":
+	{
+		"description": "Tick rate defined for this match. Only applicable to server authoritative multiplayer.",
+		"name": "match_tick_rate"
+	},
+	"query_params":
+	{
+		"description": "Query params that was passed through from HTTP request.",
+		"name": "query_params"
+	},
+	"session_id":
+	{
+		"description": "The user session associated with the execution context.",
+		"name": "session_id"
+	},
+	"user_id":
+	{
+		"description": "The user ID associated with the execution context.",
+		"name": "user_id"
+	},
+	"user_session_exp":
+	{
+		"description": "The user session expiry in seconds associated with the execution context.",
+		"name": "user_session_exp"
+	},
+	"username":
+	{
+		"description": "The username associated with the execution context.",
+		"name": "username"
+	}
+}

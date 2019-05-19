@@ -76,5 +76,21 @@
 		["wallets_update\tNakama Function", "wallets_update(${1:updates}, ${2:update_ledger})"],
 		["wallet_ledger_list\tNakama Function", "wallet_ledger_list(${1:user_id})"],
 		["wallet_ledger_update\tNakama Function", "wallet_ledger_update(${1:id}, ${2:metadata})"]
+	],
+	"autocomplete-context":
+	[
+		["env\tContext Variable", "env"],
+		["execution_mode\tContext Variable", "execution_mode"],
+		["query_params\tContext Variable", "query_params"],
+		["session_id\tContext Variable", "session_id"],
+		["user_id\tContext Variable", "user_id"],
+		["username\tContext Variable", "username"],
+		["user_session_exp\tContext Variable", "user_session_exp"],
+		["client_ip\tContext Variable", "client_ip"],
+		["client_port\tContext Variable", "client_port"],
+		["match_id\tContext Variable", "match_id"],
+		["match_node\tContext Variable", "match_node"],
+		["match_label\tContext Variable", "match_label"],
+		["match_tick_rate\tContext Variable", "match_tick_rate"]
 	]
 }
