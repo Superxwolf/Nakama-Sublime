@@ -53,7 +53,7 @@
 		["storage_read\tNakama Function", "storage_read(${1:object_ids})"],
 		["storage_list\tNakama Function", "storage_list(${1:user_id}, ${2:collection}, ${3:limit}, ${4:cursor})"],
 		["storage_delete\tNakama Function", "storage_delete(${1:object_ids})"],
-		["storage_update\tNakama Function", "storage_update(${1:record_keys})"],
+		// ["storage_update\tNakama Function", "storage_update(${1:record_keys})"],
 		["storage_write\tNakama Function", "storage_write(${1:new_objects})"],
 		["sql_exec\tNakama Function", "sql_exec(${1:query}, ${2:parameters})"],
 		["sql_query\tNakama Function", "sql_query(${1:query}, ${2:parameters})"],

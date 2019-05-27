@@ -89,7 +89,9 @@ class NakamaDocFetchCommand(sublime_plugin.TextCommand):
 			if cur_func['args'] is not None: 
 				cur_func['args'] = parse_args(cur_func['args'])
 				cur_func['param_types'] = args_to_params_type(cur_func['args'])
-			api_functions.set(m[param_indexes['func_name']], cur_func)
+
+			if m[param_indexes['func_name']] != "storage_update":
+				api_functions.set(m[param_indexes['func_name']], cur_func)
 			
 		self.save_doc_settings()
 
